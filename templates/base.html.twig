@@ -14,16 +14,7 @@
         {% endblock %}
     </head>
     <body class="bg-violet-950 text-neutral-50 min-h-screen">
-    <header class="bg-purple-800 shadow-md">
-    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-    <a href="/" class="text-xl font-bold">L'eau de ma ville</a>
-    <ul class="flex gap-6">
-    <li><a href="/" class="hover:underline">Accueil</a></li>
-    <li><a href="/" class="hover:underline">Analyse</a></li>
-    <li><a href="/" class="hover:underline">Rapport</a></li>
-    </ul>
-    </nav>
-    </header>
+    {{ include('components/_navbar.html.twig') }}
     <main class="container mx-auto px-4 py-8">
         {% block body %}{% endblock %}
         </main>
