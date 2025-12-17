@@ -13,7 +13,23 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="bg-amber-50">
+    <body class="bg-violet-950 text-neutral-50 min-h-screen">
+    <header class="bg-purple-800 shadow-md">
+    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="/" class="text-xl font-bold">L'eau de ma ville</a>
+    <ul class="flex gap-6">
+    <li><a href="/" class="hover:underline">Accueil</a></li>
+    <li><a href="/" class="hover:underline">Analyse</a></li>
+    <li><a href="/" class="hover:underline">Rapport</a></li>
+    </ul>
+    </nav>
+    </header>
+    <main class="container mx-auto px-4 py-8">
         {% block body %}{% endblock %}
+        </main>
+
+        <footer class="border-t mt-10 py-6 text-center bg-violet-950 text-neutral-50 text-sm max-h-fit">
+            &copy; {{ "now"|date("Y") }} - Analyse Eau Potable
+        </footer>
     </body>
 </html>
