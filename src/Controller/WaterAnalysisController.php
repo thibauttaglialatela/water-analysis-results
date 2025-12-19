@@ -2,24 +2,36 @@
 
 namespace App\Controller;
 
+use App\Form\Type\SearchCityType;
 use App\Service\CallApiHubeau;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class WaterAnalysisController extends AbstractController
 {
     #[Route('/water/analysis', name: 'app_water_analysis')]
-    public function showAnalysis(CallApiHubeau $callApiHubeau): Response
+    public function showAnalysis(CallApiHubeau $callApiHubeau, Request $request): Response
     {
-        $codeCommune = $callApiHubeau->getInseeCode('Nice');
+        $form = $this->createForm(SearchCityType::class);
+        $form->handleRequest($request);
 
-        $lastResults = $callApiHubeau->fetchLast6MonthsResults($codeCommune);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        dd($lastResults['data']);
+            try {
+                $codeCommune = $callApiHubeau->getInseeCode($form->get('city')->getData());
+
+                return $this->redirectToRoute('app_result', ['code_commune' => $codeCommune]);
+            } catch (\Throwable $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->redirectToRoute('app_result');
+            }
+        }
+
 
         return $this->render('water_analysis/index.html.twig', [
-
+            'form' => $form,
         ]);
     }
 }
