@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service;
+
+use DateInterval;
+use DateTimeImmutable;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+class CallApiHubeau
+{
+    private const ENDPOINT = 'v1/qualite_eau_potable/';
+
+    public function __construct(private HttpClientInterface $client, private string $baseApiUrl)
+    {
+    }
+
+    public function fetchOneCityByName(string $cityName): array
+    {
+        if ('' === trim($cityName)) {
+            throw new \InvalidArgumentException("Le nom de la ville ne peut être vide");
+        }
+
+        return $this->request('communes_udi', ['nom_commune' => $cityName]);
+
+    }
+
+    public function getInseeCode(string $cityName): string
+    {
+        $commune = strtoupper($cityName);
+        $cityList = $this->fetchOneCityByName($commune);
+
+        foreach ($cityList['data'] ?? [] as $city) {
+            if ($city['nom_commune'] === $commune) {
+                return $city['code_commune'];
+            }
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Aucun code INSEE trouvé pour %s', $cityName
+        ));
+
+    }
+
+    public function fetchLast6MonthsResults(string $inseeCode): array
+    {
+        $currentDate = new DateTimeImmutable();
+
+        return $this->request('resultats_dis', [
+            'code_commune' => $inseeCode,
+            'date_max_prelevement' => $currentDate->format('Y-m-d'),
+            'date_min_prelevement' => $currentDate->sub(new DateInterval('P6M'))->format('Y-m-d'),
+            'sort' => 'asc'
+        ]);
+
+    }
+
+    private function request(string $path, array $query): array
+    {
+        try {
+            $response = $this->client->request(
+                'GET',
+                $this->baseApiUrl . self::ENDPOINT . $path, [
+                    'query' => $query
+                ]
+            );
+
+            return $response->toArray();
+        } catch (\Throwable $e) {
+            throw new \RuntimeException('Hubeau API request failed: ' . $e->getMessage());
+        }
+    }
+}
