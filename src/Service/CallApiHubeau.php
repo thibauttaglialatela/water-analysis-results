@@ -6,6 +6,7 @@ namespace App\Service;
 
 use DateInterval;
 use DateTimeImmutable;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CallApiHubeau
@@ -28,17 +29,20 @@ class CallApiHubeau
 
     public function getInseeCode(string $cityName): string
     {
-        $commune = strtoupper($cityName);
+        $slugger = new AsciiSlugger();
+        $normalizedCityName = $slugger->slug($cityName)->toString();
+        $commune = strtoupper($normalizedCityName);
         $cityList = $this->fetchOneCityByName($commune);
 
         foreach ($cityList['data'] ?? [] as $city) {
-            if ($city['nom_commune'] === $commune) {
+            if (isset($city['nom_commune'], $city['code_commune']) && $commune === $city['nom_commune']) {
                 return $city['code_commune'];
             }
+
         }
 
         throw new \RuntimeException(sprintf(
-            'Aucun code INSEE trouvé pour %s', $cityName
+            '%s n\'existe pas ou aucun code INSEE trouvé.', $cityName
         ));
 
     }

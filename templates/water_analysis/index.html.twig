@@ -1,15 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello WaterAnalysisController!{% endblock %}
+{% block title %}Hello WaterAnalysisController!
+{% endblock %}
 
 {% block body %}
-    <section class="container px-6 py-16 mx-auto">
-        <article class="items-center lg:flex lg:justify-center">
-            <section class="w-full lg:w-1/2">
-                <article class="lg:max-w-xl">
-                    <h1 class="text-3xl font-semibold text-center text-gray-800 dark:text-white lg:text-4xl">Notre outil de recherche</h1>
-                </article>
-            </section>
-        </article>
-    </section>
+	<section class="container px-6 py-16 mx-auto">
+		<article class="items-center lg:flex lg:justify-center">
+			<section class="w-full lg:w-1/2">
+				<article class="lg:max-w-xl">
+					<h1 class="text-3xl font-semibold text-center text-gray-800 dark:text-white lg:text-4xl">Notre outil de recherche</h1>
+					{{ form_start(form) }}
+					<label for="{{ form.city.vars.id }}">
+						<span class="text-sm font-medium text-gray-800">
+							Ville à rechercher
+						</span>
+						<div class="relative">
+							{{ form_widget(form.city) }}
+							<span class="absolute inset-y-0 right-2 grid w-8 place-content-center">
+								<button type="submit" aria-label="Submit" class="rounded-full p-1.5 text-gray-800 transition-colors bg-transparent hover:bg-blue-800 hover:text-white">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+										<path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
+									</svg>
+								</button>
+							</span>
+						</div>
+					</label>
+					{{ form_end(form) }}
+				</article>
+			</section>
+		</article>
+	</section>
 {% endblock %}
