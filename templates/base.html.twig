@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}L'eau de ma ville{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}L'eau de ma ville
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		{% block stylesheets %}
+			<link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+		{% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body class="bg-cyan-300 text-neutral-50 min-h-screen flex flex-col">
-    {{ include('components/_navbar.html.twig') }}
-    <main class="container mx-auto px-4 py-8">
-        {% block body %}{% endblock %}
-        </main>
-        {{ include('components/_footer.html.twig') }}
-    </body>
-</html>
+		{% block javascripts %}
+			{% block importmap %}
+				{{ importmap('app') }}
+			{% endblock %}
+		{% endblock %}
+	</head>
+	<body class="bg-cyan-300 text-neutral-50 min-h-screen flex flex-col">
+		{{ include('components/_navbar.html.twig') }}
+		{% for message in app.flashes('error') %}
+			<div role="alert" class="rounded-md border border-red-500 bg-red-50 p-4 shadow-sm mt-8">
+				<div class="flex items-start gap-4">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mt-0.5 size-6 text-red-700">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"></path>
+					</svg>
+					<div class="flex-1">
+						<strong class="block leading-tight font-medium text-red-800">Une erreur est survenue :
+						</strong>
+						<p class="mt-0.5 text-sm text-red-700">
+							{{ message }}
+						</p>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<main class="container mx-auto px-4 py-8"> {% block body %}{% endblock %}
+			</main>
+			{{ include('components/_footer.html.twig') }}
+		</body>
+	</html>
