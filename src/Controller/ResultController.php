@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 final class ResultController extends AbstractController
 {
@@ -16,8 +17,17 @@ final class ResultController extends AbstractController
     {
         $codeCommune = $request->query->get('code_commune');
 
-        //on récupérer toutes les données d'analyse sur 6 mois
-        $rawDate = $callApi->fetchLast6MonthsResults($codeCommune);
+        if (!$codeCommune) {
+            return $this->redirectToRoute('app_home');
+        }
+        
+        try {
+            $rawDate = $callApi->fetchLast6MonthsResults($codeCommune);
+        } catch (Throwable $e) {
+            $this->addFlash('error', $e->getMessage());
+            return $this->redirectToRoute('app_home');
+        }
+        
         
         //filtrage par le dto
         $dtos = [];
@@ -29,8 +39,6 @@ final class ResultController extends AbstractController
                 date: new \DateTimeImmutable($result['date_prelevement'])
             );
         }
-
-        dd($dtos);
 
         return $this->render('result/index.html.twig', [
             'code_commune' => $codeCommune
