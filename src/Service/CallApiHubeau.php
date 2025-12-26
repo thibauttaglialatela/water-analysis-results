@@ -58,7 +58,6 @@ class CallApiHubeau
             'sort' => 'asc'
         ]);
 
-
     }
 
     private function request(string $path, array $query): array
