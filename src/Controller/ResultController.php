@@ -22,7 +22,7 @@ final class ResultController extends AbstractController
         }
         
         try {
-            $rawDate = $callApi->fetchLast6MonthsResults($codeCommune);
+            $rawdata = $callApi->fetchLast6MonthsResults($codeCommune);
         } catch (Throwable $e) {
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('app_home');
@@ -30,18 +30,28 @@ final class ResultController extends AbstractController
         
         
         //filtrage par le dto
-        $dtos = [];
-        foreach ($rawDate['data'] as $result) {
-            $dtos[] = new WaterAnalysisDto(
-                parameter: $result['libelle_parametre'],
-                value: isset($result['resultat_numerique']) ? (float) $result['resultat_numerique'] : null,
-                unit: $result['libelle_unite'] ?? null,
-                date: new \DateTimeImmutable($result['date_prelevement'])
+        $results = [];
+        foreach ($rawdata['data'] as $row) {
+            $results[] = new WaterAnalysisDto(
+                parameter: $row['libelle_parametre'],
+                value: isset($row['resultat_numerique']) ? (float) $row['resultat_numerique'] : null,
+                unit: $row['libelle_unite'] ?? null,
+                date: new \DateTimeImmutable($row['date_prelevement'])
             );
         }
 
+        //on groupe par paramétre
+        $grouped = [];
+
+        foreach ($results as $dto) {
+            $grouped[$dto->parameter][] = $dto;
+        }
+
+        dd($grouped);
+
         return $this->render('result/index.html.twig', [
-            'code_commune' => $codeCommune
+            'code_commune' => $codeCommune,
+            'results' => $results
         ]);
     }
 }
