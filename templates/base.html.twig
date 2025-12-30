@@ -18,7 +18,7 @@
 			{% endblock %}
 		{% endblock %}
 	</head>
-	<body class="bg-cyan-300 text-neutral-50 min-h-screen flex flex-col">
+	<body class="bg-cyan-300 text-neutral-50 min-h-screen flex flex-col lg:max-w-full">
 		{{ include('components/_navbar.html.twig') }}
 		{% for message in app.flashes('error') %}
 			<div role="alert" class="rounded-md border border-red-500 bg-red-50 p-4 shadow-sm mt-8">
