@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\WaterAnalysisDto;
+use App\Enums\WaterParameter;
 use App\Service\CallApiHubeau;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +33,14 @@ final class ResultController extends AbstractController
         //filtrage par le dto
         $results = [];
         foreach ($rawdata['data'] as $row) {
+            $parameter = WaterParameter::tryFrom($row['libelle_parametre']);
+
+            if ($parameter === null) {
+                continue;
+            }
+
             $results[] = new WaterAnalysisDto(
-                parameter: $row['libelle_parametre'],
+                parameter: $parameter,
                 value: isset($row['resultat_numerique']) ? (float) $row['resultat_numerique'] : null,
                 unit: $row['libelle_unite'] ?? null,
                 date: new \DateTimeImmutable($row['date_prelevement'])
@@ -44,14 +51,14 @@ final class ResultController extends AbstractController
         $grouped = [];
 
         foreach ($results as $dto) {
-            $grouped[$dto->parameter][] = $dto;
+            $grouped[$dto->parameter->value][] = $dto;
         }
 
-        dd($grouped);
+        
 
         return $this->render('result/index.html.twig', [
             'code_commune' => $codeCommune,
-            'results' => $results
+            'grouped_results' => $grouped
         ]);
     }
 }
