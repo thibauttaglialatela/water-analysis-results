@@ -10,4 +10,7 @@ enum WaterParameter: string
     case NITRATE = "Nitrates (en NO3)";
     case NITRITE = "Nitrites (en NO2)";
     case TEMPERATURE = "Température de l'eau";
+    case CHLORE_LIBRE = "Chlore libre";
+    case COLIFORMES = "Bactéries coliformes /100ml-MS";
+    case CONDUCTIVITE = "Conductivité à 25°C";
 }
