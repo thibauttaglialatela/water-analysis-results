@@ -49,14 +49,24 @@ class CallApiHubeau
 
     public function fetchLast6MonthsResults(string $inseeCode): array
     {
+        if ('' === trim($inseeCode)) {
+            throw new \InvalidArgumentException('Code INSEE vide');
+        }
+
         $currentDate = new DateTimeImmutable();
 
-        return $this->request('resultats_dis', [
+        $response = $this->request('resultats_dis', [
             'code_commune' => $inseeCode,
             'date_max_prelevement' => $currentDate->format('Y-m-d'),
             'date_min_prelevement' => $currentDate->sub(new DateInterval('P6M'))->format('Y-m-d'),
             'sort' => 'asc'
         ]);
+
+        if (!array_key_exists('data', $response)) {
+            throw new \RuntimeException('Réponse API invalide');
+        }
+
+        return $response;
 
     }
 
