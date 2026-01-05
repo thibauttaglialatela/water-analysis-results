@@ -22,16 +22,21 @@ final class ResultController extends AbstractController
 
 
         if (!$codeCommune) {
+            $this->addFlash('error', 'Code INSEE manquant.');
             return $this->redirectToRoute('app_home');
         }
 
         try {
             $rawdata = $callApi->fetchLast6MonthsResults($codeCommune);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('app_home');
         }
 
+        if (empty($rawdata['data'])) {
+            $this->addFlash('error', 'Aucune analyse disponible pour ce code INSEE');
+            return $this->redirectToRoute('app_home');
+        }
 
         //filtrage par le dto
         $results = [];

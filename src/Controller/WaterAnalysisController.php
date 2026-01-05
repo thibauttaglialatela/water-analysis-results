@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\Type\SearchCityByInseeCode;
 use App\Form\Type\SearchCityType;
 use App\Service\CallApiHubeau;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,9 @@ final class WaterAnalysisController extends AbstractController
         $form = $this->createForm(SearchCityType::class);
         $form->handleRequest($request);
 
+        $inseeCodeForm = $this->createForm(SearchCityByInseeCode::class);
+        $inseeCodeForm->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             try {
@@ -29,9 +33,16 @@ final class WaterAnalysisController extends AbstractController
             }
         }
 
+        if ($inseeCodeForm->isSubmitted() && $inseeCodeForm->isValid()) {
+            $codeCommune = $inseeCodeForm->get('insee_code')->getData();
+
+            return $this->redirectToRoute('app_result', ['code_commune' => $codeCommune]);
+        }
+
 
         return $this->render('water_analysis/index.html.twig', [
             'form' => $form,
+            'insee_code_form' => $inseeCodeForm
         ]);
     }
 }
