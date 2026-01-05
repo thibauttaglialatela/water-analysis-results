@@ -5,7 +5,6 @@
 {% block body %}
 <section class="container px-6 py-16 mx-auto">
 <h1 class="text-3xl font-semibold text-center text-gray-800 dark:text-white lg:text-4xl">Ville de {{ nom_commune }}</h1>
-<p class="text-lg text-left text-gray-800 dark:text-white lg:text-4xl">{{ conclusion_prelevements }}</p>
 {% for chart in charts %}
 {{ render_chart(chart) }}      
 {% endfor %}

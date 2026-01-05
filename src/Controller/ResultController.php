@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\DTO\SanitaryControlDto;
 use App\DTO\WaterAnalysisDto;
 use App\Enums\WaterParameter;
 use App\Service\CallApiHubeau;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -40,7 +43,6 @@ final class ResultController extends AbstractController
 
         //filtrage par le dto
         $results = [];
-        $conclusionPrelevement = $rawdata['data'][0]['conclusion_conformite_prelevement'];
         $cityName = $rawdata['data'][0]['nom_commune'];
 
         foreach ($rawdata['data'] as $row) {
@@ -110,13 +112,65 @@ final class ResultController extends AbstractController
             ]);
         }
 
-
-
-
         return $this->render('result/index.html.twig', [
             'nom_commune' => $cityName,
             'charts' => $charts,
-            'conclusion_prelevements' => $conclusionPrelevement
         ]);
+    }
+
+
+    #[Route('/sanitary-control-history', name: 'app_sanitary_control_history')]
+    public function showSanitaryControlHistory(Request $request, CallApiHubeau $callApi): Response
+    {
+        $codeCommune = $request->query->get('code_commune');
+        $cityName = $request->query->get('city');
+
+        if (!$codeCommune) {
+            $this->addFlash('error', 'Code INSEE manquant.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        try {
+            $rawdata = $callApi->fetchLast6MonthsResults($codeCommune);
+        } catch (\Throwable $e) {
+            $this->addFlash('error', $e->getMessage());
+            return $this->redirectToRoute('app_home');
+        }
+
+        if (empty($rawdata['data'])) {
+            $this->addFlash('error', 'Aucune analyse disponible pour ce code INSEE');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $controls = [];
+
+        foreach ($rawdata['data'] as $row) {
+            $controls[] = new SanitaryControlDto(
+                date: new \DateTimeImmutable($row['date_prelevement']),
+                conclusionConformite: $this->hasNonConformity($row) ? $row['conclusion_conformite_prelevement'] : null
+            );
+        }
+        
+        return $this->render('result/sanitary_control_history.html.twig', [
+            'controls' => $this->uniqueMultimArray($controls),
+            'city_name' => $cityName
+        ]);
+    }
+
+    private function hasNonConformity(array $row): bool
+    {
+        return in_array('N', [
+            $row['conformite_limites_bact_prelevement'] ?? null,
+            $row['conformite_limites_pc_prelevement'] ?? null,
+            $row['conformite_references_bact_prelevement'] ?? null,
+            $row['conformite_references_pc_prelevement'] ?? null
+        ], true);
+    }
+
+    private function uniqueMultimArray(array $array): array
+    {
+        $serialized = array_map('serialize', $array);
+        $unique = array_unique($serialized);
+        return array_map('unserialize', $unique);
     }
 }

@@ -1,27 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	{{ parent() }}
-	- Formulaire de recherche
-{% endblock %}
+{% block title %}{{ parent() }} - Historique des contrôles{% endblock %}
 
 {% block body %}
 	<section class="container px-6 py-16 mx-auto">
 		<article class="items-center lg:flex lg:justify-center">
 			<section class="w-full lg:w-1/2">
-				<article class="lg:max-w-xl">
-					<h1 class="text-3xl font-semibold text-center text-gray-800 dark:text-white lg:text-4xl">Quels sont les résultats d'analyse pour votre ville ?</h1>
+				<article class="lg:min-w-xl">
+					<h1 class="text-3xl font-semibold text-center text-gray-800 lg:text-4xl">Accéder à tout l'historique des contrôles sanitaires de l'eau d'une commune</h1>
 					{{ form_start(form, {'attr': {'class': 'mt-6'}}) }}
 					{{ component('SearchFormRow', {
 						field: form.city,
-						label: 'Rechercher une ville par son nom'
+						label: 'En la recherchant par son nom'
 					})}}
 					{{ form_end(form) }}
-
 					{{ form_start(insee_code_form, {'attr': {'class': 'mt-6'}}) }}
 					{{ component('SearchFormRow', {
 						field: insee_code_form.insee_code,
-						label: 'Rechercher une ville par son code INSEE'
+						label: 'En la recherchant par son identifiant INSEE'
 					})}}
 					{{ form_end(insee_code_form) }}
 				</article>
