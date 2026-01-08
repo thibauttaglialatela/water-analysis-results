@@ -27,6 +27,15 @@ class CallApiHubeau
 
     }
 
+    public function findCityNameByInseeCode(string $inseeCode): string
+    {
+        if ('' === trim($inseeCode)) {
+            throw new \InvalidArgumentException("Vous devez fournir le numéro INSEE de la ville recherchée");
+        }
+
+        return $this->request('communes_udi', ['code_commune' => $inseeCode, 'size' => 1])['data'][0]["nom_commune"];
+    }
+
     public function getInseeCode(string $cityName): string
     {
         $slugger = new AsciiSlugger();

@@ -11,12 +11,12 @@
         <ul data-menu-target="menu"
             class="hidden md:flex flex-col md:flex-row gap-8
                    fixed inset-0 bg-blue-800/95 text-white justify-center items-center
-                   text-2xl md:static md:bg-transparent md:text-base md:justify-start md:items-center md:gap-6
+                   text-2xl md:static md:bg-transparent md:text-base md:justify-start md:items-center md:gap-8
                    transition-all duration-300 ease-in-out z-40">
 
-            <li><a href="{{ path('app_home') }}" class="hover:underline">Accueil</a></li>
-            <li><a href="{{ path('app_water_analysis') }}" class="hover:underline">Rechercher</a></li>
-            <li><a href="/" class="hover:underline">Rapport</a></li>
+            <li class="min-w-max whitespace-nowrap"><a href="{{ path('app_home') }}" class="hover:underline">Accueil</a></li>
+            <li class="min-w-max whitespace-nowrap"><a href="{{ path('app_water_analysis') }}" class="hover:underline">Qualité de l’eau</a></li>
+            <li class="min-w-max whitespace-nowrap"><a href="{{ path('app_sanitary_control') }}" class="hover:underline">Contrôles sanitaires</a></li>
         </ul>
 
     </nav>

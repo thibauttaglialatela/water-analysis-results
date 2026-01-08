@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}
+	- Historique des contrôles sanitaires
+{% endblock %}
+
+{% block body %}
+	<section class="container px-6 py-16 mx-auto">
+		<h1 class="text-3xl font-semibold text-center text-gray-800 dark:text-white lg:text-4xl">Historique des contrôles sanitaires sur les 6 derniers mois de la ville de
+			{{ city_name|capitalize }}</h1>
+		<section class="overflow-x-auto max-h-screen mt-4">
+			<table class="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700">
+				<thead class="sticky top-0 ltr:text-left rtl:text-right bg-blue-800">
+					<tr class="*:font-medium *:text-white">
+						<th class="px-3 py-2 whitespace-nowrap">Date</th>
+						<th class="px-3 py-2 whitespace-nowrap">Conclusions</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-200 *:even:bg-gray-50 dark:divide-gray-700 dark:*:even:bg-gray-800">
+
+					{% set hasIssue = false %}
+
+					{% for control in controls %}
+						{% if control.conclusionConformite is not null %}
+							{% set hasIssue = true %}
+							<tr class="*:text-gray-900 *:first:font-medium dark:*:text-white">
+								<td class="px-3 py-2 whitespace-nowrap">
+									{{ control.date|format_date('full', locale: 'fr') }}
+								</td>
+								<td class="px-3 py-2 wrap-anywhere">
+									{{ control.conclusionConformite }}
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+
+					{% if not hasIssue %}
+						<tr>
+							<td colspan="2" class="px-3 py-4 text-center font-medium text-green-700 bg-green-50 dark:bg-green-900/20 dark:text-green-300">
+								✅ Aucun problème détecté sur les prélèvements
+							</td>
+						</tr>
+					{% endif %}
+
+				</tbody>
+			</table>
+		</section>
+	</section>
+{% endblock %}
