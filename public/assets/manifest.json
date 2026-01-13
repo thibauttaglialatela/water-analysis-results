@@ -1,0 +1,16 @@
+{
+    "@symfony\/stimulus-bundle\/controllers.js": "\/assets\/@symfony\/stimulus-bundle\/controllers-Py6zEl_.js",
+    "@symfony\/stimulus-bundle\/loader.js": "\/assets\/@symfony\/stimulus-bundle\/loader-V1GtHuK.js",
+    "@symfony\/ux-chartjs\/controller.js": "\/assets\/@symfony\/ux-chartjs\/controller-K2Mf6fa.js",
+    "@symfony\/ux-turbo\/turbo_controller.js": "\/assets\/@symfony\/ux-turbo\/turbo_controller-8wQNi2p.js",
+    "@symfony\/ux-turbo\/turbo_stream_controller.js": "\/assets\/@symfony\/ux-turbo\/turbo_stream_controller-LcKyCZE.js",
+    "app.js": "\/assets\/app-TNXHCQF.js",
+    "controllers\/csrf_protection_controller.js": "\/assets\/controllers\/csrf_protection_controller-6ynUAeX.js",
+    "controllers\/hello_controller.js": "\/assets\/controllers\/hello_controller-VYgvytJ.js",
+    "controllers\/menu_controller.js": "\/assets\/controllers\/menu_controller-4kDsmf3.js",
+    "stimulus_bootstrap.js": "\/assets\/stimulus_bootstrap-xCO4u8H.js",
+    "styles\/app.css": "\/assets\/styles\/app-oji_DmJ.css",
+    "vendor\/@hotwired\/stimulus\/stimulus.index.js": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-S4zNcea.js",
+    "vendor\/@hotwired\/turbo\/turbo.index.js": "\/assets\/vendor\/@hotwired\/turbo\/turbo.index-pT15T6h.js",
+    "vendor\/chart.js\/chart.js.index.js": "\/assets\/vendor\/chart.js\/chart.js.index-06TNMkm.js"
+}
